@@ -18,8 +18,10 @@
   [source open close f]
   (loop [nests 0]
     (swap! ip f)
-    (if (and (= 0 nests) (= close (nth source @ip))) ()
-        (recur (if (= open (nth source @ip)) (inc nests) nests)))))
+    (case (nth source @ip)
+      open (recur (inc nests))
+      close (if (= 0 nests) () (recur (dec nests)))
+      (recur nests))))
 
 (defn execute-string
   [source input]
